@@ -1,17 +1,17 @@
 [ORG 0x100]
 jmp start
-subtraction: dw 20, 10
+multiplication: dw 10, 10
 result: dw 0
 
-subtractNumber:
-	push bp
+multiplyNumber:
+		push bp
 		mov bp, sp
 		mov ax, 0
-		push si
+		push si 
 
 		mov si, [bp + 4]
 		mov ax, [si]
-		sub ax, word[si + 2]
+		mul word[si + 2]
 		mov [result], ax
 		pop si
 		pop bp
@@ -26,15 +26,15 @@ printNum:
 		push cx
 		push dx
 		push di
-
+		
 		mov ax, 0xb800
 		mov es, ax
 		xor di, di
 		mov ax, [bp + 4]
 		mov bx, 10
 		mov cx, 0
-
-next:
+		
+next: 		
 		xor dx, dx
 		div bx
 		add dl, 0x30
@@ -42,16 +42,16 @@ next:
 		inc cx
 		cmp ax, 0
 		jnz next
-
+		
 		xor di, di
-
-nextProc:
+		
+nextProc:	
 		pop dx
 		mov dh, 0x07
 		mov [es:di], dx
 		add di, 2
 		loop nextProc
-
+		
 		pop di
 		pop dx
 		pop cx
@@ -60,13 +60,13 @@ nextProc:
 		pop es
 		pop bp
 		ret 2
-
-
+		
+	
 
 start:
-		mov ax, subtraction
+		mov ax, multiplication
 		push ax
-		call subtractNumber
+		call multiplyNumber
 		mov ax, [result]
 		push ax
 		call printNum
